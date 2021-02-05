@@ -10,21 +10,20 @@ class Deck
   end
 
   def high_ranking_cards
-    high_cards = []
-    @cards.each do |card|
-      if card.rank > 10
-        high_cards << card
-      end
+    @cards.find_all do |card|
+      card.rank > 10
     end
-    high_cards
   end
 
-  def count_high_cards
-    high_ranking_cards.count.to_f
-  end
-
-#count of high/count of total * 100
   def percent_high_ranking
-    (count_high_cards/cards.count).round(3) * 100
+    (high_ranking_cards.count.to_f / @cards.count * 100).round(2)
+  end
+
+  def remove_card
+    @cards.delete_at(0)
+  end
+
+  def add_card(card)
+    @cards << card
   end
 end
