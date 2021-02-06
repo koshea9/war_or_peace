@@ -10,18 +10,34 @@ class Turn
   end
 
   def type
-    if player1.deck.rank_of_card_at(0) == player2.deck.rank_of_card_at(0) &&
-      player1.deck.rank_of_card_at(2) == player2.deck.rank_of_card_at(2)
-      return :mutually_assured_destruction
-    end
-    if player1.deck.rank_of_card_at(0) != player2.deck.rank_of_card_at(0)
-      return :basic
-    end
-    if player1.deck.rank_of_card_at(0) == player2.deck.rank_of_card_at(0)
-      return :war
+    return :basic if @player1.deck.rank_of_card_at(0) != @player2.deck.rank_of_card_at(0)
+    return :war if @player1.deck.rank_of_card_at(0) == @player2.deck.rank_of_card_at(0)
+  end
+
+  def winner
+    if :basic
+    @player1.deck.rank_of_card_at(0) > @player2.deck.rank_of_card_at(0)
+      @player1
+    else
+      @player2
     end
   end
 
-  
+  def pile_cards
+    if :basic
+    @spoils_of_war << @player1.deck.cards[0]
+      @player1.deck.remove_card
+    @spoils_of_war << @player2.deck.cards[0]
+     @player2.deck.remove_card
+    else
+      :war
+    end
+  end
 
+  def award_spoils(winner)
+    @spoils_of_war.map do |card|
+      winner.deck.add_card(card)
+    end
+    @spoils_of_war = []
+  end
 end
