@@ -13,7 +13,7 @@ attr_reader :player1,
             :turn
 
   def initialize(filename)
-    @cards = CardGenerator.new(filename).cards
+    @cards = CardGenerator.new(filename).cards.shuffle
     @deck1 = Deck.new(@cards[0..24])
     @deck2 = Deck.new(@cards[25..51])
     @player1 = Player.new('Megan', @deck1)
@@ -26,8 +26,8 @@ attr_reader :player1,
     welcome_message
     start_input = gets.chomp.upcase
     if start_input == "GO"
-    until game_over?
-        play
+      until game_over? == true
+      play
     end
       else
       p "bye!"
@@ -36,18 +36,16 @@ attr_reader :player1,
 
   def play
     @play_counter += 1
-    @turn.player1
-    @turn.player2
-    @turn.pile_cards
-    @turn.type
+    @turn
+    type = @turn.type
     winner = @turn.winner
+    @turn.pile_cards
     @turn.award_spoils(winner)
-    result_message
+    p result_message(type)
   end
 
   def game_over?
-    @player1.has_lost? || @player2.has_lost? || @player_counter == 1000000
-    game_over_message
+    @player1.has_lost? || @player2.has_lost? || @play_counter == 1000000
   end
 
   def welcome_message
@@ -57,67 +55,21 @@ attr_reader :player1,
     puts "------------------------------------------------------------------"
   end
 
-  def result_message
-  if @turn.type == :basic &&
+  def result_message(type)
+  if type == :basic
    "Turn#{@play_counter}: #{@turn.winner.name} won 2 cards"
-   elsif @turn.type == :war
-    "Turn#{@play_counter}: WAR - #{@turn.winner.name} won 6 cards"
-   elsif @turn.type == :mutually_assured_destruction
-    "Turn#{@play_counter}: *mutually assured destruction* 6 cards removed from play"
+ elsif type == :war
+   "Turn#{@play_counter}: WAR - #{@turn.winner.name} won 6 cards"
+ elsif type == :mutually_assured_destruction
+   "Turn#{@play_counter}: *mutually assured destruction* 6 cards removed from play"
    end
  end
 
   def game_over_message
-    require "pry"; binding.pry
-   if @player1.has_lost? == true
-   "*~*~*~* #{@player2} has won the game! *~*~*~*"
-   elsif @player2.has_lost? == true
-  "*~*~*~* #{@player1} has won the game! *~*~*~*"
+   if @player1.has_lost?
+   p "*~*~*~* #{@player2} has won the game! *~*~*~*"
+    elsif @player2.has_lost?
+   p "*~*~*~* #{@player1} has won the game! *~*~*~*"
     end
   end
 end
-
-
-#
-# def war_message
-# if @type == :war && @turn.winner == @player1
-#   "Turn#{@play_counter}: WAR - #{@turn.winner.name} won 6 cards"
-# elsif @type == :war && @turn.winner == @player2
-#   "Turn#{@play_counter}: WAR - #{@player2} won 6 cards"
-#   end
-# end
-#
-# def destruction_message
-#   @type == :mutually_assured_destruction
-#   "Turn#{@play_counter}: *mutually assured destruction* 6 cards removed from play"
-# end
-#
-# def winner_message
-#   if @player1.has_lost? == true
-#     return "*~*~*~* #{@player2} has won the game! *~*~*~*"
-#   elsif @player2.has_lost? == true
-#       return "*~*~*~* #{@player1} has won the game! *~*~*~*"
-#   end
-# end
-# end
-
-# def result_message
-#   if @turn.type == :basic && @turn.winner == @player1
-#     return "Turn#{@play_counter}: #{@player1} won 2 cards"
-#   elsif @type == :basic && @turn.winner == @player2
-#       return "Turn#{@play_counter}: #{@player2} won 2 cards"
-#     end
-#   if @turn.type == :war && @turn.winner == @player1
-#   "Turn#{@play_counter}: WAR - #{@turn.winner.name} won 6 cards"
-#   elsif @type == :war && @turn.winner == @player2
-#   "Turn#{@play_counter}: WAR - #{@player2} won 6 cards"
-#   end
-# end
-#   if @player1.has_lost? == true
-#     "*~*~*~* #{@player2} has won the game! *~*~*~*"
-#   elsif @player2.has_lost? == true
-#       "*~*~*~* #{@player1} has won the game! *~*~*~*"
-#     end
-#   if @type == :mutually_assured_destruction
-#   "Turn#{@play_counter}: *mutually assured destruction* 6 cards removed from play"
-#   end
