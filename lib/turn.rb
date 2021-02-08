@@ -20,7 +20,6 @@ class Turn
     end
   end
 
-
   def winner
    if type == :mutually_assured_destruction
       return "No Winner"

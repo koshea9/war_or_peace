@@ -2,6 +2,7 @@ require 'minitest/autorun'
 require 'minitest/pride'
 require './lib/deck.rb'
 require './lib/card'
+require './lib/player'
 
 class DeckTest < Minitest::Test
   def test_it_exists
